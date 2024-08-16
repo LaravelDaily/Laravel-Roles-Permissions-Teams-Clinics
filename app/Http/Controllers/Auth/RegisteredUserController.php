@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\Role;
+use App\Models\Team;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -35,15 +38,31 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        [$user, $team] = DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            $team = $user->teams()->create([
+                'name' => $request->name .' Team',
+            ]);
+
+            $user->update(['current_team_id' => $team->id]);
+
+            return [$user, $team];
+        });
 
         event(new Registered($user));
 
         Auth::login($user);
+
+        /** @var $team Team */
+        setPermissionsTeamId($team->id);
+
+        /** @var $user User */
+        $user->assignRole(Role::SuperAdmin);
 
         return redirect(route('dashboard', absolute: false));
     }

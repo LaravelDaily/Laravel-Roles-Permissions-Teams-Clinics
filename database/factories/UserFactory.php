@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\Role;
+use App\Models\User;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -40,5 +43,21 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function masterAdmin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $team = Team::create([
+                'name' => 'Master Team',
+            ]);
+
+            $user->teams()->attach($team->id, ['is_owner' => true]);
+            $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
+
+            $user->assignRole(Role::MasterAdmin);
+        });
     }
 }

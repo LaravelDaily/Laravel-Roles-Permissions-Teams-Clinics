@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Role as RoleEnum;
+use Spatie\Permission\Models\Role as RoleModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,6 +15,15 @@ class Team extends Model
     protected $fillable = [
         'name',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(function (Team $team) {
+            RoleModel::create(['name' => RoleEnum::SuperAdmin->value, 'team_id' => $team->id]);
+            RoleModel::create(['name' => RoleEnum::Admin->value, 'team_id' => $team->id]);
+            RoleModel::create(['name' => RoleEnum::User->value, 'team_id' => $team->id]);
+        });
+    }
 
     public function users(): BelongsToMany
     {
