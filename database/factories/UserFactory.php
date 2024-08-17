@@ -80,7 +80,7 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->afterCreating(function (User $user) {
-            $team = Team::where('name', 'Super Team')->first();
+            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
 
             $user->teams()->attach($team->id);
             $user->update(['current_team_id' => $team->id]);
@@ -94,7 +94,7 @@ class UserFactory extends Factory
     public function user(): static
     {
         return $this->afterCreating(function (User $user) {
-            $team = Team::where('name', 'Super Team')->first();
+            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
 
             $user->teams()->attach($team->id);
             $user->update(['current_team_id' => $team->id]);
