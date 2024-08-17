@@ -60,4 +60,48 @@ class UserFactory extends Factory
             $user->assignRole(Role::MasterAdmin);
         });
     }
+
+    public function superAdmin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $team = Team::create([
+                'name' => 'Super Team',
+            ]);
+
+            $user->teams()->attach($team->id, ['is_owner' => true]);
+            $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
+
+            $user->assignRole(Role::SuperAdmin);
+        });
+    }
+
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $team = Team::where('name', 'Super Team')->first();
+
+            $user->teams()->attach($team->id);
+            $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
+
+            $user->assignRole(Role::Admin);
+        });
+    }
+
+    public function user(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $team = Team::where('name', 'Super Team')->first();
+
+            $user->teams()->attach($team->id);
+            $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
+
+            $user->assignRole(Role::User);
+        });
+    }
 }
