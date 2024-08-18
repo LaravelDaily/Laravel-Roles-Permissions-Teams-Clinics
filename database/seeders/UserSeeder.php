@@ -31,14 +31,22 @@ class UserSeeder extends Seeder
             ]);
 
         User::factory()
-            ->user()
+            ->patient()
             ->create([
                 'name' => 'Regular User',
                 'email' => 'user@user.com',
             ]);
 
         User::factory(5)
-            ->user()
+            ->patient()
+            ->create();
+
+        User::factory(5)
+            ->doctor()
+            ->create();
+
+        User::factory(5)
+            ->staff()
             ->create();
     }
 }
