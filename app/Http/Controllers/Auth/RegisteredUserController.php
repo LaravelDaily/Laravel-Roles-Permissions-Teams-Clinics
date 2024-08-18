@@ -22,7 +22,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $teams = Team::where('name', '!=', 'Master Team')->pluck('name', 'id');
+
+        return view('auth.register', compact('teams'));
     }
 
     /**
@@ -36,33 +38,29 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'team_id' => ['required', 'exists:teams,id'],
         ]);
 
-        [$user, $team] = DB::transaction(function () use ($request) {
+        $user = DB::transaction(function () use ($request) {
             $user = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
             ]);
 
-            $team = $user->teams()->create([
-                'name' => $request->name .' Team',
-            ]);
+            $user->update(['current_team_id' => $request->team_id]);
 
-            $user->update(['current_team_id' => $team->id]);
-
-            return [$user, $team];
+            return $user;
         });
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        /** @var $team Team */
-        setPermissionsTeamId($team->id);
+        setPermissionsTeamId($request->team_id);
 
         /** @var $user User */
-        $user->assignRole(Role::SuperAdmin);
+        $user->assignRole(Role::User);
 
         return redirect(route('dashboard', absolute: false));
     }
