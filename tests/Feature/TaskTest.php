@@ -13,10 +13,12 @@ it('allows super admin and admin to access create task page', function (User $us
 })->with([
     fn () => User::factory()->superAdmin()->create(),
     fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->doctor()->create(),
+    fn () => User::factory()->staff()->create(),
 ]);
 
 it('does not allow user to access create task page', function () {
-    $user =  User::factory()->user()->create();
+    $user =  User::factory()->patient()->create();
 
     actingAs($user)
         ->get(route('tasks.create'))
@@ -43,6 +45,7 @@ it('allows super admin and admin to enter update page for any task in their team
 })->with([
     fn () => User::factory()->superAdmin()->create(),
     fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->doctor()->create(),
 ]);
 
 it('does not allow administrator and manager to enter update page for other teams task', function (User $user) {
@@ -61,6 +64,7 @@ it('does not allow administrator and manager to enter update page for other team
 })->with([
     fn () => User::factory()->superAdmin()->create(),
     fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->doctor()->create(),
 ]);
 
 it('allows administrator and manager to update any task in their team', function (User $user) {
@@ -87,10 +91,11 @@ it('allows administrator and manager to update any task in their team', function
 })->with([
     fn () => User::factory()->superAdmin()->create(),
     fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->doctor()->create(),
 ]);
 
 it('allows user to update his own task', function () {
-    $user = User::factory()->user()->create();
+    $user = User::factory()->patient()->create();
     $task = Task::factory()->create([
         'user_id' => $user->id,
         'team_id' => $user->current_team_id,
@@ -104,8 +109,8 @@ it('allows user to update his own task', function () {
     expect($task->refresh()->name)->toBe('updated task name');
 });
 
-it('does no allow user to update other users task on the same team', function () {
-    $user = User::factory()->user()->create();
+it('does not allow user to update other users task on the same team', function () {
+    $user = User::factory()->patient()->create();
     $task = Task::factory()->create([
         'user_id' => User::factory()->create(['current_team_id' => $user->id])->id,
         'team_id' => $user->current_team_id,
@@ -134,6 +139,7 @@ it('allows super admin and admin to delete task for his team', function (User $u
 })->with([
     fn () => User::factory()->superAdmin()->create(),
     fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->staff()->create(),
 ]);
 
 it('does not allow super admin and admin to delete task for other team', function (User $user) {
@@ -154,4 +160,5 @@ it('does not allow super admin and admin to delete task for other team', functio
 })->with([
     fn () => User::factory()->superAdmin()->create(),
     fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->staff()->create(),
 ]);

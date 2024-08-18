@@ -4,7 +4,9 @@ namespace App\Enums;
 
 enum Role: string
 {
-    case User = 'user';
+    case Patient = 'patient';
+    case Doctor = 'doctor';
+    case Staff = 'staff';
     case Admin = 'admin';
     case SuperAdmin = 'super-admin';
     case MasterAdmin = 'master-admin';
@@ -12,7 +14,9 @@ enum Role: string
     public function label(): string
     {
         return match ($this) {
-            self::User        => 'User',
+            self::Patient     => 'Patient',
+            self::Doctor      => 'Doctor',
+            self::Staff       => 'Staff',
             self::Admin       => 'Admin',
             self::SuperAdmin  => 'Super Admin',
             self::MasterAdmin => 'Master Admin',

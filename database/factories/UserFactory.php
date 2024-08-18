@@ -91,7 +91,7 @@ class UserFactory extends Factory
         });
     }
 
-    public function user(): static
+    public function doctor(): static
     {
         return $this->afterCreating(function (User $user) {
             $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
@@ -101,7 +101,35 @@ class UserFactory extends Factory
 
             setPermissionsTeamId($team->id);
 
-            $user->assignRole(Role::User);
+            $user->assignRole(Role::Doctor);
+        });
+    }
+
+    public function staff(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
+
+            $user->teams()->attach($team->id);
+            $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
+
+            $user->assignRole(Role::Staff);
+        });
+    }
+
+    public function patient(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
+
+            $user->teams()->attach($team->id);
+            $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
+
+            $user->assignRole(Role::Patient);
         });
     }
 }

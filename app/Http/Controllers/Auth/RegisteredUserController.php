@@ -60,7 +60,7 @@ class RegisteredUserController extends Controller
         setPermissionsTeamId($request->team_id);
 
         /** @var $user User */
-        $user->assignRole(Role::User);
+        $user->assignRole(Role::Patient);
 
         return redirect(route('dashboard', absolute: false));
     }

@@ -21,7 +21,9 @@ class Team extends Model
         static::created(function (Team $team) {
             RoleModel::create(['name' => RoleEnum::SuperAdmin->value, 'team_id' => $team->id]);
             RoleModel::create(['name' => RoleEnum::Admin->value, 'team_id' => $team->id]);
-            RoleModel::create(['name' => RoleEnum::User->value, 'team_id' => $team->id]);
+            RoleModel::create(['name' => RoleEnum::Patient->value, 'team_id' => $team->id]);
+            RoleModel::create(['name' => RoleEnum::Doctor->value, 'team_id' => $team->id]);
+            RoleModel::create(['name' => RoleEnum::Staff->value, 'team_id' => $team->id]);
         });
     }
 
