@@ -37,5 +37,5 @@ it('does not allow to change team for user without super admin role', function (
 
 })->with([
     fn () => User::factory()->admin()->create(),
-    fn () => User::factory()->user()->create(),
+    fn () => User::factory()->patient()->create(),
 ]);
