@@ -41,17 +41,12 @@ class RegisteredUserController extends Controller
             'team_id' => ['required', 'exists:teams,id'],
         ]);
 
-        $user = DB::transaction(function () use ($request) {
-            $user = User::create([
-                'name'     => $request->name,
-                'email'    => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-
-            $user->update(['current_team_id' => $request->team_id]);
-
-            return $user;
-        });
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'current_team_id' => $request->team_id,
+        ]);
 
         event(new Registered($user));
 
