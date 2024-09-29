@@ -48,15 +48,13 @@ class RegisteredUserController extends Controller
             'current_team_id' => $request->team_id,
         ]);
 
-        $user->teams()->attach($request->team_id);
-
         event(new Registered($user));
 
         Auth::login($user);
 
         setPermissionsTeamId($request->team_id);
 
-        /** @var $user User */
+        $user->teams()->attach($request->team_id);
         $user->assignRole(Role::Patient);
 
         return redirect(route('dashboard', absolute: false));

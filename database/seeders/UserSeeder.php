@@ -19,14 +19,14 @@ class UserSeeder extends Seeder
         User::factory()
             ->superAdmin()
             ->create([
-                'name' => 'Master Admin',
+                'name' => 'Super Admin',
                 'email' => 'super@admin.com',
             ]);
 
         User::factory()
             ->admin()
             ->create([
-                'name' => 'Master Admin',
+                'name' => 'Regular Admin',
                 'email' => 'admin@admin.com',
             ]);
 
