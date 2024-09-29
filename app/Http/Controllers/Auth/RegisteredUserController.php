@@ -48,6 +48,8 @@ class RegisteredUserController extends Controller
             'current_team_id' => $request->team_id,
         ]);
 
+        $user->teams()->attach($request->team_id);
+
         event(new Registered($user));
 
         Auth::login($user);
