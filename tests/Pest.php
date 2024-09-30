@@ -16,6 +16,9 @@ use Tests\TestCase;
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function () {
+        \Pest\Laravel\seed(\Database\Seeders\RoleSeeder::class);
+    })
     ->in('Feature');
 
 /*

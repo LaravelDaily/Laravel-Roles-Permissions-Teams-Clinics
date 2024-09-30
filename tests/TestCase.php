@@ -11,5 +11,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $this->withoutVite();
     }
 }
