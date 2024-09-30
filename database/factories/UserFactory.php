@@ -52,7 +52,6 @@ class UserFactory extends Factory
                 'name' => 'Master Team',
             ]);
 
-            $user->teams()->attach($team->id, ['is_owner' => true]);
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
@@ -68,7 +67,6 @@ class UserFactory extends Factory
                 'name' => 'Super Team',
             ]);
 
-            $user->teams()->attach($team->id, ['is_owner' => true]);
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
@@ -82,7 +80,6 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
 
-            $user->teams()->attach($team->id);
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
@@ -96,7 +93,6 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
 
-            $user->teams()->attach($team->id);
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
@@ -110,7 +106,6 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
 
-            $user->teams()->attach($team->id);
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
@@ -124,7 +119,6 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user) {
             $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
 
-            $user->teams()->attach($team->id);
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);

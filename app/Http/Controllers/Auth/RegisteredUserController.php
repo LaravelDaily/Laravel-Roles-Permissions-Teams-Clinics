@@ -54,7 +54,6 @@ class RegisteredUserController extends Controller
 
         setPermissionsTeamId($request->team_id);
 
-        $user->teams()->attach($request->team_id);
         $user->assignRole(Role::Patient);
 
         return redirect(route('dashboard', absolute: false));

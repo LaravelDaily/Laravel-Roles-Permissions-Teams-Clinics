@@ -29,7 +29,6 @@ it('allows super admin and admin to enter update page for any task in their team
     $team = Team::first();
 
     $otherUser = User::factory()->admin()->create();
-    $otherUser->teams()->sync($team);
     $otherUser->update(['current_team_id' => $team->id]);
     setPermissionsTeamId($team->id);
     $otherUser->unsetRelation('roles')->unsetRelation('permissions');
@@ -52,7 +51,6 @@ it('does not allow administrator and manager to enter update page for other team
     $team = Team::factory()->create();
 
     $taskUser = User::factory()->admin()->create();
-    $taskUser->teams()->sync($team);
     $task = Task::factory()->create([
         'user_id' => $taskUser->id,
         'team_id' => $team->id,
@@ -71,7 +69,6 @@ it('allows administrator and manager to update any task in their team', function
     $team = Team::first();
 
     $otherUser = User::factory()->admin()->create();
-    $otherUser->teams()->sync($team);
     $otherUser->update(['current_team_id' => $team->id]);
     setPermissionsTeamId($team->id);
     $otherUser->unsetRelation('roles')->unsetRelation('permissions');
@@ -146,7 +143,6 @@ it('does not allow super admin and admin to delete task for other team', functio
     $team = Team::factory()->create();
 
     $taskUser = User::factory()->admin()->create();
-    $taskUser->teams()->sync($team);
     $taskUser->update(['current_team_id' => $team->id]);
 
     $task = Task::factory()->create([

@@ -18,6 +18,6 @@ class Team extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withPivot('is_owner');
+        return $this->belongsToMany(User::class);
     }
 }

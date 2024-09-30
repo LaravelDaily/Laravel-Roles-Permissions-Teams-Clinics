@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function teams(): BelongsToMany
     {
-        return $this->belongsToMany(Team::class)->withPivot('is_owner');
+        return $this->belongsToMany(Team::class, config('permission.table_names.model_has_roles'), 'model_id');
     }
 
     public function currentTeam(): BelongsTo

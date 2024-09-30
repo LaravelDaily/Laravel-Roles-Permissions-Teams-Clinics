@@ -3,13 +3,18 @@
 
 use App\Models\User;
 use App\Models\Team;
+use App\Enums\Role as RoleEnum;
+use Spatie\Permission\Models\Role as RoleModel;
 use function Pest\Laravel\actingAs;
 
 it('allows user to change team', function () {
     $user = User::factory()->superAdmin()->create();
     $otherUser = User::factory()->superAdmin()->create();
 
-    $user->teams()->attach($otherUser->id);
+    $user->teams()->attach($otherUser->id, [
+        'role_id' => RoleModel::where('name', RoleEnum::SuperAdmin->value)->first()->id,
+        'model_type' => $user->getMorphClass(),
+    ]);
 
     actingAs($user)
         ->get(route('team.change', $otherUser->current_team_id));
