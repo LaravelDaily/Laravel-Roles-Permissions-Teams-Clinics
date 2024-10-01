@@ -6,18 +6,17 @@ use App\Models\Team;
 use App\Models\Task;
 use function Pest\Laravel\actingAs;
 
-it('allows super admin and admin to access create task page', function (User $user) {
+it('allows clinic admin and staff to access create task page', function (User $user) {
     actingAs($user)
         ->get(route('tasks.create'))
         ->assertOk();
 })->with([
-    fn () => User::factory()->superAdmin()->create(),
-    fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->clinicAdmin()->create(),
     fn () => User::factory()->doctor()->create(),
     fn () => User::factory()->staff()->create(),
 ]);
 
-it('does not allow user to access create task page', function () {
+it('does not allow patient to access create task page', function () {
     $user =  User::factory()->patient()->create();
 
     actingAs($user)
@@ -25,16 +24,16 @@ it('does not allow user to access create task page', function () {
         ->assertForbidden();
 });
 
-it('allows super admin and admin to enter update page for any task in their team', function (User $user) {
+it('allows clinic admin and staff to enter update page for any task in their team', function (User $user) {
     $team = Team::first();
 
-    $otherUser = User::factory()->admin()->create();
-    $otherUser->update(['current_team_id' => $team->id]);
+    $clinicAdmin = User::factory()->clinicAdmin()->create();
+    $clinicAdmin->update(['current_team_id' => $team->id]);
     setPermissionsTeamId($team->id);
-    $otherUser->unsetRelation('roles')->unsetRelation('permissions');
+    $clinicAdmin->unsetRelation('roles')->unsetRelation('permissions');
 
     $task = Task::factory()->create([
-        'user_id' => $otherUser->id,
+        'user_id' => $clinicAdmin->id,
         'team_id' => $team->id,
     ]);
 
@@ -42,15 +41,15 @@ it('allows super admin and admin to enter update page for any task in their team
         ->get(route('tasks.edit', $task))
         ->assertOk();
 })->with([
-    fn () => User::factory()->superAdmin()->create(),
-    fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->clinicAdmin()->create(),
     fn () => User::factory()->doctor()->create(),
+    fn () => User::factory()->staff()->create(),
 ]);
 
 it('does not allow administrator and manager to enter update page for other teams task', function (User $user) {
     $team = Team::factory()->create();
 
-    $taskUser = User::factory()->admin()->create();
+    $taskUser = User::factory()->clinicAdmin()->create();
     $task = Task::factory()->create([
         'user_id' => $taskUser->id,
         'team_id' => $team->id,
@@ -60,15 +59,15 @@ it('does not allow administrator and manager to enter update page for other team
         ->get(route('tasks.edit', $task))
         ->assertNotFound();
 })->with([
-    fn () => User::factory()->superAdmin()->create(),
-    fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->clinicAdmin()->create(),
     fn () => User::factory()->doctor()->create(),
+    fn () => User::factory()->staff()->create(),
 ]);
 
 it('allows administrator and manager to update any task in their team', function (User $user) {
     $team = Team::first();
 
-    $otherUser = User::factory()->admin()->create();
+    $otherUser = User::factory()->clinicAdmin()->create();
     $otherUser->update(['current_team_id' => $team->id]);
     setPermissionsTeamId($team->id);
     $otherUser->unsetRelation('roles')->unsetRelation('permissions');
@@ -86,9 +85,9 @@ it('allows administrator and manager to update any task in their team', function
 
     expect($task->refresh()->name)->toBe('updated task name');
 })->with([
-    fn () => User::factory()->superAdmin()->create(),
-    fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->clinicAdmin()->create(),
     fn () => User::factory()->doctor()->create(),
+    fn () => User::factory()->staff()->create(),
 ]);
 
 it('allows user to update his own task', function () {
@@ -134,15 +133,15 @@ it('allows super admin and admin to delete task for his team', function (User $u
 
     expect(Task::count())->toBeInt()->toBe(0);
 })->with([
-    fn () => User::factory()->superAdmin()->create(),
-    fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->clinicAdmin()->create(),
+    fn () => User::factory()->doctor()->create(),
     fn () => User::factory()->staff()->create(),
 ]);
 
 it('does not allow super admin and admin to delete task for other team', function (User $user) {
     $team = Team::factory()->create();
 
-    $taskUser = User::factory()->admin()->create();
+    $taskUser = User::factory()->clinicAdmin()->create();
     $taskUser->update(['current_team_id' => $team->id]);
 
     $task = Task::factory()->create([
@@ -154,7 +153,7 @@ it('does not allow super admin and admin to delete task for other team', functio
         ->delete(route('tasks.destroy', $task))
         ->assertNotFound();
 })->with([
-    fn () => User::factory()->superAdmin()->create(),
-    fn () => User::factory()->admin()->create(),
+    fn () => User::factory()->clinicAdmin()->create(),
+    fn () => User::factory()->doctor()->create(),
     fn () => User::factory()->staff()->create(),
 ]);

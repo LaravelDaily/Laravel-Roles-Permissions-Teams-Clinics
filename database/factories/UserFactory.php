@@ -19,6 +19,8 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
+    private string $clinicDefaultName = 'Clinic 123';
+
     /**
      * Define the model's default state.
      *
@@ -48,8 +50,11 @@ class UserFactory extends Factory
     public function masterAdmin(): static
     {
         return $this->afterCreating(function (User $user) {
+            // Although Master admin doesn't have a team
+            // We need to create a "Fake" team
+            // Because of spatie/laravel-permission DB structure
             $team = Team::create([
-                'name' => 'Master Team',
+                'name' => 'Master Admin Team',
             ]);
 
             $user->update(['current_team_id' => $team->id]);
@@ -60,38 +65,38 @@ class UserFactory extends Factory
         });
     }
 
-    public function superAdmin(): static
+    public function clinicOwner(): static
     {
         return $this->afterCreating(function (User $user) {
             $team = Team::create([
-                'name' => 'Super Team',
+                'name' => $this->clinicDefaultName,
             ]);
 
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
 
-            $user->assignRole(Role::SuperAdmin);
+            $user->assignRole(Role::ClinicOwner);
         });
     }
 
-    public function admin(): static
+    public function clinicAdmin(): static
     {
         return $this->afterCreating(function (User $user) {
-            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
+            $team = Team::firstOrCreate(['name' => $this->clinicDefaultName]);
 
             $user->update(['current_team_id' => $team->id]);
 
             setPermissionsTeamId($team->id);
 
-            $user->assignRole(Role::Admin);
+            $user->assignRole(Role::ClinicAdmin);
         });
     }
 
     public function doctor(): static
     {
         return $this->afterCreating(function (User $user) {
-            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
+            $team = Team::firstOrCreate(['name' => $this->clinicDefaultName]);
 
             $user->update(['current_team_id' => $team->id]);
 
@@ -104,7 +109,7 @@ class UserFactory extends Factory
     public function staff(): static
     {
         return $this->afterCreating(function (User $user) {
-            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
+            $team = Team::firstOrCreate(['name' => $this->clinicDefaultName]);
 
             $user->update(['current_team_id' => $team->id]);
 
@@ -117,7 +122,7 @@ class UserFactory extends Factory
     public function patient(): static
     {
         return $this->afterCreating(function (User $user) {
-            $team = Team::where('name', 'Super Team')->first() ?? Team::factory()->create();
+            $team = Team::firstOrCreate(['name' => $this->clinicDefaultName]);
 
             $user->update(['current_team_id' => $team->id]);
 

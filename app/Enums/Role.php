@@ -7,8 +7,8 @@ enum Role: string
     case Patient = 'patient';
     case Doctor = 'doctor';
     case Staff = 'staff';
-    case Admin = 'admin';
-    case SuperAdmin = 'super-admin';
+    case ClinicAdmin = 'clinic-admin';
+    case ClinicOwner = 'clinic-owner';
     case MasterAdmin = 'master-admin';
 
     public function label(): string
@@ -17,8 +17,8 @@ enum Role: string
             self::Patient     => 'Patient',
             self::Doctor      => 'Doctor',
             self::Staff       => 'Staff',
-            self::Admin       => 'Admin',
-            self::SuperAdmin  => 'Super Admin',
+            self::ClinicAdmin => 'Clinic Admin',
+            self::ClinicOwner => 'Clinic Owner',
             self::MasterAdmin => 'Master Admin',
         };
     }

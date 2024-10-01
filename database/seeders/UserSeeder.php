@@ -17,24 +17,24 @@ class UserSeeder extends Seeder
             ]);
 
         User::factory()
-            ->superAdmin()
+            ->clinicOwner()
             ->create([
-                'name' => 'Super Admin',
-                'email' => 'super@admin.com',
+                'name' => 'Clinic Owner',
+                'email' => 'owner@clinic.com',
             ]);
 
         User::factory()
-            ->admin()
+            ->clinicAdmin()
             ->create([
-                'name' => 'Regular Admin',
-                'email' => 'admin@admin.com',
+                'name' => 'Clinic Admin',
+                'email' => 'admin@clinic.com',
             ]);
 
         User::factory()
             ->patient()
             ->create([
-                'name' => 'Regular User',
-                'email' => 'user@user.com',
+                'name' => 'Regular Patient',
+                'email' => 'user@clinic.com',
             ]);
 
         User::factory(5)

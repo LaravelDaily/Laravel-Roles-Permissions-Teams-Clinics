@@ -10,17 +10,17 @@ class TaskPolicy
 {
     public function create(User $user): bool
     {
-        return $user->hasAnyRole([Role::SuperAdmin, Role::Admin, Role::Doctor, Role::Staff]);
+        return $user->hasAnyRole([Role::ClinicAdmin, Role::Doctor, Role::Staff]);
     }
 
     public function update(User $user, Task $task): bool
     {
-        return ($user->hasAnyRole([Role::SuperAdmin, Role::Admin, Role::Doctor])
+        return ($user->hasAnyRole([Role::ClinicAdmin, Role::Doctor, Role::Staff])
             || $user->id === $task->user_id) && $user->current_team_id === $task->team_id;
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $user->hasAnyRole([Role::SuperAdmin, Role::Admin, Role::Staff]) && $user->current_team_id === $task->team_id;
+        return $user->hasAnyRole([Role::ClinicAdmin, Role::Doctor, Role::Staff]) && $user->current_team_id === $task->team_id;
     }
 }

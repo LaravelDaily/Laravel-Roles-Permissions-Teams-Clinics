@@ -11,7 +11,7 @@ class TeamController extends Controller
     {
         $team = auth()->user()->teams()->findOrFail($teamId);
 
-        if (! auth()->user()->belongsToTeam($team) || ! auth()->user()->hasRole(Role::SuperAdmin)) {
+        if (! auth()->user()->belongsToTeam($team) || ! auth()->user()->hasRole(Role::ClinicOwner)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
