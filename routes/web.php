@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamUserController;
@@ -24,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::get('team/change/{teamId}', [TeamController::class, 'changeCurrentTeam'])->name('team.change');
 
     Route::resource('tasks', TaskController::class);
+
+    Route::resource('users', UserController::class)->only(['index', 'create', 'store']);
 });
 
 require __DIR__.'/auth.php';
