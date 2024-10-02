@@ -58,7 +58,7 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
 
-        $task->update($request->only('name', 'due_date'));
+        $task->update($request->only('name', 'due_date', 'assigned_to_user_id', 'patient_id'));
 
         return redirect()->route('tasks.index');
     }

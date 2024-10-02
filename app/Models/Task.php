@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,6 +38,10 @@ class Task extends Model
         static::addGlobalScope('team-tasks', function (Builder $query) {
             if (auth()->check()) {
                 $query->where('team_id', auth()->user()->current_team_id);
+
+                if (auth()->user()->hasRole(Role::Patient)) {
+                    $query->where('patient_id', auth()->user()->id);
+                }
             }
         });
     }
