@@ -18,7 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('team/change/{teamId}', TeamController::class)->name('team.change');
+    Route::resource('teams', TeamController::class);
+    Route::get('team/change/{teamId}',
+        [TeamController::class, 'changeCurrentTeam'])->name('team.change');
 
     Route::resource('tasks', TaskController::class);
 });

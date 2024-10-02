@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Role;
+use App\Models\Team;
 use Symfony\Component\HttpFoundation\Response;
 
 class TeamController extends Controller
 {
-    public function __invoke(int $teamId)
+    public function index()
+    {
+        $teams = Team::where('name', '!=', 'Master Admin Team')->paginate();
+
+        return view('teams.index', compact('teams'));
+    }
+
+    public function changeCurrentTeam(int $teamId)
     {
         $team = auth()->user()->teams()->findOrFail($teamId);
 
