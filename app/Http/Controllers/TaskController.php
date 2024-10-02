@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +14,7 @@ class TaskController extends Controller
 {
     public function index(): View
     {
-        $tasks = Task::with('user')->get();
+        $tasks = Task::with('assignee', 'patient')->get();
 
         return view('tasks.index', compact('tasks'));
     }
@@ -21,15 +23,20 @@ class TaskController extends Controller
     {
         Gate::authorize('create', Task::class);
 
-        return view('tasks.create');
+        $assignees = User::whereRelation('roles', 'name', '=', Role::Doctor->value)
+            ->orWhereRelation('roles', 'name', '=', Role::Staff->value)
+            ->pluck('name', 'id');
+
+        $patients = User::whereRelation('roles', 'name', '=', Role::Patient->value)->pluck('name', 'id');
+
+        return view('tasks.create', compact('patients', 'assignees'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         Gate::authorize('create', Task::class);
 
-        Task::create($request->only('name', 'due_date')
-            + ['user_id' => auth()->id()]);
+        Task::create($request->only('name', 'due_date', 'assigned_to_user_id', 'patient_id'));
 
         return redirect()->route('tasks.index');
     }
@@ -38,7 +45,13 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
 
-        return view('tasks.edit', compact('task'));
+        $assignees = User::whereRelation('roles', 'name', '=', Role::Doctor->value)
+            ->orWhereRelation('roles', 'name', '=', Role::Staff->value)
+            ->pluck('name', 'id');
+
+        $patients = User::whereRelation('roles', 'name', '=', Role::Patient->value)->pluck('name', 'id');
+
+        return view('tasks.edit', compact('task', 'assignees', 'patients'));
     }
 
     public function update(Request $request, Task $task): RedirectResponse

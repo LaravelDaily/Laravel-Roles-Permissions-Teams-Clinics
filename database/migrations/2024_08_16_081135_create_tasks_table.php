@@ -11,7 +11,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->date('due_date');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('assigned_to_user_id')->constrained('users');
+            $table->foreignId('patient_id')->constrained('users');
             $table->timestamps();
         });
     }

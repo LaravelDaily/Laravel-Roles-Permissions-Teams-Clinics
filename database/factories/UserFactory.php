@@ -59,6 +59,8 @@ class UserFactory extends Factory
 
             $user->update(['current_team_id' => $team->id]);
 
+            setPermissionsTeamId($team->id);
+
             $user->assignRole(Role::MasterAdmin);
         });
     }
@@ -72,6 +74,8 @@ class UserFactory extends Factory
 
             $user->update(['current_team_id' => $team->id]);
 
+            setPermissionsTeamId($team->id);
+
             $user->assignRole(Role::ClinicOwner);
         });
     }
@@ -82,6 +86,8 @@ class UserFactory extends Factory
             $team = Team::firstOrCreate(['name' => $this->clinicDefaultName]);
 
             $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
 
             $user->assignRole(Role::ClinicAdmin);
         });
@@ -94,6 +100,8 @@ class UserFactory extends Factory
 
             $user->update(['current_team_id' => $team->id]);
 
+            setPermissionsTeamId($team->id);
+
             $user->assignRole(Role::Doctor);
         });
     }
@@ -105,6 +113,8 @@ class UserFactory extends Factory
 
             $user->update(['current_team_id' => $team->id]);
 
+            setPermissionsTeamId($team->id);
+
             $user->assignRole(Role::Staff);
         });
     }
@@ -115,6 +125,8 @@ class UserFactory extends Factory
             $team = Team::firstOrCreate(['name' => $this->clinicDefaultName]);
 
             $user->update(['current_team_id' => $team->id]);
+
+            setPermissionsTeamId($team->id);
 
             $user->assignRole(Role::Patient);
         });

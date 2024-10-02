@@ -14,7 +14,8 @@ class Task extends Model
     protected $fillable = [
         'name',
         'due_date',
-        'user_id',
+        'assigned_to_user_id',
+        'patient_id',
         'team_id',
     ];
 
@@ -40,7 +41,12 @@ class Task extends Model
         });
     }
 
-    public function user(): BelongsTo
+    public function assignee(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to_user_id');
+    }
+
+    public function patient(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

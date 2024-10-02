@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
                 'email' => 'user@clinic.com',
             ]);
 
-        /*User::factory(5)
+        User::factory(5)
             ->patient()
             ->create();
 
@@ -47,6 +47,6 @@ class UserSeeder extends Seeder
 
         User::factory(5)
             ->staff()
-            ->create();*/
+            ->create();
     }
 }
