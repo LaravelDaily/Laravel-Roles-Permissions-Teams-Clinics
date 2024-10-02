@@ -32,13 +32,12 @@ it('does not allow user to change team if user is not in the team', function () 
     expect($clinicOwner->refresh()->current_team_id)->toBe($clinicOwner->current_team_id);
 });
 
-it('does not allow to change team for user without clinic owner role', function (User $user) {
+it('does not allow to change team for user without switch team permissions', function (User $user) {
     $team = Team::factory()->create();
 
     actingAs($user)
         ->get(route('team.change', $team->id))
-        ->assertNotFound();
-
+        ->assertForbidden();
 })->with([
     fn () => User::factory()->masterAdmin()->create(),
     fn () => User::factory()->clinicAdmin()->create(),

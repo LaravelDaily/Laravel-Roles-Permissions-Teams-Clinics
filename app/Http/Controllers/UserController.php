@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Role;
 use App\Models\User;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,6 +15,8 @@ class UserController extends Controller
 {
     public function index(): View
     {
+        Gate::authorize('viewAny', User::class);
+
         $users = User::with('roles')
             ->whereHas('roles', function (Builder $query) {
                 return $query->where('name', '=', Role::ClinicAdmin->value)
@@ -27,6 +30,8 @@ class UserController extends Controller
 
     public function create(): View
     {
+        Gate::authorize('create', User::class);
+
         $roles = RoleModel::where('name', '=', Role::ClinicAdmin->value)
             ->orWhere('name', '=', Role::Doctor->value)
             ->orWhere('name', '=', Role::Staff->value)
@@ -37,6 +42,8 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request): RedirectResponse
     {
+        Gate::authorize('create', User::class);
+
         $user = User::create($request->except('role_id'));
 
         $user->assignRole($request->integer('role_id'));

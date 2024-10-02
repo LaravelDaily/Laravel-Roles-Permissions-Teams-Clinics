@@ -6,6 +6,7 @@ use App\Enums\Role as RoleEnum;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreTeamRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,8 @@ class TeamController extends Controller
 {
     public function index(): View
     {
+        Gate::authorize('viewAny', Team::class);
+
         $teams = Team::where('name', '!=', 'Master Admin Team')->paginate();
 
         return view('teams.index', compact('teams'));
@@ -22,13 +25,18 @@ class TeamController extends Controller
 
     public function create(): View
     {
-        $users = User::whereRelation('rolesWithoutTeam', 'name', '=', RoleEnum::ClinicOwner->value)->pluck('name', 'id');
+        Gate::authorize('create', Team::class);
+
+        $users = User::whereRelation('rolesWithoutTeam', 'name', '=', RoleEnum::ClinicOwner->value)
+            ->pluck('name', 'id');
 
         return view('teams.create', compact('users'));
     }
 
     public function store(StoreTeamRequest $request): RedirectResponse
     {
+        Gate::authorize('create', Team::class);
+
         $team = Team::create($request->validated());
 
         User::find($request->integer('user_id'))
@@ -43,9 +51,11 @@ class TeamController extends Controller
 
     public function changeCurrentTeam(int $teamId)
     {
+        Gate::authorize('changeTeam', Team::class);
+
         $team = auth()->user()->teams()->findOrFail($teamId);
 
-        if (! auth()->user()->belongsToTeam($team) || ! auth()->user()->hasRole(RoleEnum::ClinicOwner)) {
+        if (! auth()->user()->belongsToTeam($team)) {
             abort(Response::HTTP_FORBIDDEN);
         }
 

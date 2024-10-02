@@ -14,6 +14,8 @@ class TaskController extends Controller
 {
     public function index(): View
     {
+        Gate::authorize('viewAny', Task::class);
+
         $tasks = Task::with('assignee', 'patient')->get();
 
         return view('tasks.index', compact('tasks'));

@@ -11,8 +11,10 @@
                 <div class="p-6 text-gray-900">
                     <div class="overflow-hidden overflow-x-auto bg-white">
                         <div class="min-w-full align-middle">
+                            @can(\App\Enums\Permission::CREATE_USER)
                             <a href="{{ route('users.create') }}" class="underline">Create new user</a>
                             <br /><br />
+                            @endcan
 
                             <table class="min-w-full border divide-y divide-gray-200">
                                 <thead>

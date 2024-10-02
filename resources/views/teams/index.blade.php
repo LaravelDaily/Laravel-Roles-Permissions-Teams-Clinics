@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <div class="overflow-hidden overflow-x-auto bg-white">
                         <div class="min-w-full align-middle">
-                            @can('create', \App\Models\Team::class)
+                            @can(\App\Enums\Permission::CREATE_TEAM)
                                 <a href="{{ route('teams.create') }}" class="underline">Add new clinic</a>
                                 <br /><br />
                             @endcan
@@ -29,13 +29,13 @@
                                 </thead>
 
                                 <tbody class="bg-white divide-y divide-gray-200 divide-solid">
-                                @foreach($teams as $team)
-                                    <tr class="bg-white">
-                                        <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                            {{ $team->name }}
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                    @foreach($teams as $team)
+                                        <tr class="bg-white">
+                                            <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                                {{ $team->name }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
