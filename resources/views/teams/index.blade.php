@@ -15,6 +15,7 @@
                                 <a href="{{ route('teams.create') }}" class="underline">Add new clinic</a>
                                 <br /><br />
                             @endcan
+
                             <table class="min-w-full divide-y divide-gray-200 border">
                                 <thead>
                                 <tr>
