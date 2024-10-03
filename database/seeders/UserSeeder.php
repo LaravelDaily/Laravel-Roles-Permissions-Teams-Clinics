@@ -31,6 +31,13 @@ class UserSeeder extends Seeder
             ]);
 
         User::factory()
+            ->staff()
+            ->create([
+                'name' => 'Staff User',
+                'email' => 'staff@clinic.com',
+            ]);
+
+        User::factory()
             ->patient()
             ->create([
                 'name' => 'Regular Patient',

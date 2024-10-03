@@ -1,4 +1,14 @@
 <x-guest-layout>
+    @env('local')
+        <div class="space-y-2 mb-4">
+            <x-login-link email="master@admin.com" label="Login as master admin"/>
+            <x-login-link email="owner@clinic.com" label="Login as clinic owner"/>
+            <x-login-link email="admin@clinic.com" label="Login as clinic admin"/>
+            <x-login-link email="staff@clinic.com" label="Login as staff"/>
+            <x-login-link email="user@clinic.com" label="Login as patient"/>
+        </div>
+    @endenv
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
