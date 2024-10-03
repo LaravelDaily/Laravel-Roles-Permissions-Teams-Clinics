@@ -37,14 +37,28 @@ class TeamController extends Controller
     {
         Gate::authorize('create', Team::class);
 
-        $team = Team::create($request->validated());
+        $team = Team::create(['name' => $request->input('clinic_name')]);
 
-        User::find($request->integer('user_id'))
-            ->teams()
-            ->attach($team->id, [
-                'model_type' => User::class,
-                'role_id' => RoleModel::where('name', RoleEnum::ClinicOwner->value)->first()->id,
-            ]);
+        if ($request->has('user_id')) {
+            $user = User::find($request->integer('user_id'));
+
+            $user->teams()
+                ->attach($team->id, [
+                    'model_type' => User::class,
+                    'role_id'    => RoleModel::where('name', RoleEnum::ClinicOwner->value)->first()->id,
+                ]);
+
+            $user->update(['current_team_id' => $team->id]);
+        } else {
+            $user = User::create($request->only(['name', 'email', 'password']) + ['current_team_id' => $team->id]);
+
+            $user
+                ->teams()
+                ->attach($team->id, [
+                    'model_type' => User::class,
+                    'role_id' => RoleModel::where('name', RoleEnum::ClinicOwner->value)->first()->id,
+                ]);
+        }
 
         return redirect()->route('teams.index');
     }
