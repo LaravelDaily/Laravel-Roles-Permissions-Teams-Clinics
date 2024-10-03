@@ -39,7 +39,7 @@ class TeamController extends Controller
 
         $team = Team::create(['name' => $request->input('clinic_name')]);
 
-        if ($request->has('user_id')) {
+        if ($request->integer('user_id') > 0) {
             $user = User::find($request->integer('user_id'));
             $user->update(['current_team_id' => $team->id]);
         } else {

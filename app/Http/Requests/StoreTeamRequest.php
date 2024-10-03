@@ -23,11 +23,4 @@ class StoreTeamRequest extends FormRequest
     {
         return true;
     }
-
-    protected function passedValidation(): void
-    {
-        if (is_null($this->user_id)) {
-            $this->request->remove('user_id');
-        }
-    }
 }
