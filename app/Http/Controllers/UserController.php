@@ -21,7 +21,8 @@ class UserController extends Controller
             ->whereHas('roles', function (Builder $query) {
                 return $query->whereIn('name', [Role::ClinicAdmin->value, Role::Doctor->value, Role::Staff->value]);
             })
-            ->whereRelation('teams', 'team_id', '=', auth()->user()->current_team_id)->get();
+            ->whereRelation('teams', 'team_id', '=', auth()->user()->current_team_id)
+            ->get();
 
         return view('user.index', compact('users'));
     }
