@@ -88,7 +88,7 @@ it('allows administrator and manager to update any task in their team', function
 ]);
 
 it('allows super admin and admin to delete task for his team', function (User $user) {
-    $taskUser = User::factory()->create(['current_team_id' => $user->current_team_id]);
+    User::factory()->create(['current_team_id' => $user->current_team_id]);
 
     $task = Task::factory()->create([
         'team_id' => $user->current_team_id,
@@ -163,4 +163,35 @@ it('shows users with a role of patient as patients', function () {
                     || $value === $clinicAdmin->name
                 );
         });
+});
+
+it('shows only teams tasks for doctor, staff, and clinic admin', function (User $user) {
+    $seeTask = Task::factory()->create(['team_id' => $user->current_team_id]);
+    $dontSeeTask = Task::factory()->create(['team_id' => Team::factory()->create()->id]);
+
+    actingAs($user)
+        ->get(route('tasks.index'))
+        ->assertOk()
+        ->assertSeeText($seeTask->name)
+        ->assertDontSeeText($dontSeeTask->name);
+})->with([
+    fn() => User::factory()->clinicAdmin()->create(),
+    fn() => User::factory()->doctor()->create(),
+    fn() => User::factory()->staff()->create(),
+]);
+
+it('shows patient only his tasks', function () {
+    $patient = User::factory()->patient()->create();
+
+    $seeTask = Task::factory()->create([
+        'team_id' => $patient->current_team_id,
+        'patient_id' => $patient->id,
+    ]);
+    $dontSeeTask = Task::factory()->create(['team_id' => Team::factory()->create()->id]);
+
+    actingAs($patient)
+        ->get(route('tasks.index'))
+        ->assertOk()
+        ->assertSeeText($seeTask->name)
+        ->assertDontSeeText($dontSeeTask->name);
 });
