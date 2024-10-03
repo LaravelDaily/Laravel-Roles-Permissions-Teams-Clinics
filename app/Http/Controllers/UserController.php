@@ -19,9 +19,7 @@ class UserController extends Controller
 
         $users = User::with('roles')
             ->whereHas('roles', function (Builder $query) {
-                return $query->where('name', '=', Role::ClinicAdmin->value)
-                    ->orWhere('name', '=', Role::Doctor->value)
-                    ->orWhere('name', '=', Role::Staff->value);
+                return $query->whereIn('name', [Role::ClinicAdmin->value, Role::Doctor->value, Role::Staff->value]);
             })
             ->whereRelation('teams', 'team_id', '=', auth()->user()->current_team_id)->get();
 
@@ -32,9 +30,7 @@ class UserController extends Controller
     {
         Gate::authorize('create', User::class);
 
-        $roles = RoleModel::where('name', '=', Role::ClinicAdmin->value)
-            ->orWhere('name', '=', Role::Doctor->value)
-            ->orWhere('name', '=', Role::Staff->value)
+        $roles = RoleModel::whereIn('name', [Role::ClinicAdmin->value, Role::Doctor->value, Role::Staff->value])
             ->pluck('name', 'id');
 
         return view('user.create', compact('roles'));

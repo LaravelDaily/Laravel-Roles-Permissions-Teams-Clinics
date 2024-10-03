@@ -31,6 +31,7 @@ class RoleAndPermissionSeeder extends Seeder
             case RoleEnum::Staff->value:
             case RoleEnum::ClinicAdmin->value:
                 $permissions = [
+                    Permission::LIST_TASK,
                     Permission::CREATE_TASK,
                     Permission::EDIT_TASK,
                     Permission::DELETE_TASK,
@@ -43,12 +44,14 @@ class RoleAndPermissionSeeder extends Seeder
                 break;
             case RoleEnum::ClinicOwner->value:
                 $permissions = [
+                    Permission::LIST_USER,
                     Permission::CREATE_USER,
                     Permission::SWITCH_TEAM,
                 ];
                 break;
             case RoleEnum::MasterAdmin->value:
                 $permissions = [
+                    Permission::LIST_TEAM,
                     Permission::CREATE_TEAM,
                 ];
                 break;
