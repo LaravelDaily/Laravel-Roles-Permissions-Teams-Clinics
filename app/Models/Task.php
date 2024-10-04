@@ -40,7 +40,7 @@ class Task extends Model
                 $query->where('team_id', auth()->user()->current_team_id);
 
                 if (auth()->user()->hasRole(Role::Patient)) {
-                    $query->where('patient_id', auth()->user()->id);
+                    $query->where('patient_id', auth()->id());
                 }
             }
         });
@@ -53,6 +53,6 @@ class Task extends Model
 
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'patient_id');
     }
 }
