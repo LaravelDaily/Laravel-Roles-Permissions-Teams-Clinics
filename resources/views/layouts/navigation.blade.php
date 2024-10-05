@@ -15,15 +15,27 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('tasks.index')" :active="request()->routeIs('tasks.*')">
-                        {{ __('Tasks') }}
-                    </x-nav-link>
+                    @can(\App\Enums\Permission::LIST_TASK)
+                        <x-nav-link :href="route('tasks.index')" :active="request()->routeIs('tasks.*')">
+                            {{ __('Tasks') }}
+                        </x-nav-link>
+                    @endcan
+                    @can(\App\Enums\Permission::LIST_TEAM)
+                        <x-nav-link :href="route('teams.index')" :active="request()->routeIs('teams.*')">
+                            {{ __('Clinics') }}
+                        </x-nav-link>
+                    @endcan
+                    @can(\App\Enums\Permission::LIST_USER)
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                @if(Auth::user()->hasRole(\App\Enums\Role::SuperAdmin))
+                @can(\App\Enums\Permission::SWITCH_TEAM)
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -51,7 +63,7 @@
                             @endif
                         </x-slot>
                     </x-dropdown>
-                @endif
+                @endcan
 
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">

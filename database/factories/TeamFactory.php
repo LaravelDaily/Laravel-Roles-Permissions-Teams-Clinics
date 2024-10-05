@@ -9,7 +9,7 @@ class TeamFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->words(asText: true),
+            'name' => 'Clinic ' . fake()->word(),
         ];
     }
 }

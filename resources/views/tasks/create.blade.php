@@ -26,6 +26,30 @@
                             <x-input-error :messages="$errors->get('due_date')" class="mt-2" />
                         </div>
 
+                        <!-- Assignee -->
+                        <div class="mt-4">
+                            <x-input-label for="assigned_to_user_id" :value="__('Assignee')" />
+                            <select name="assigned_to_user_id" id="assigned_to_user_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option>-- SELECT ASSIGNEE --</option>
+                                @foreach($assignees as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('assigned_to_user_id')" class="mt-2" />
+                        </div>
+
+                        <!-- Patients -->
+                        <div class="mt-4">
+                            <x-input-label for="patient_id" :value="__('Patient')" />
+                            <select name="patient_id" id="patient_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option>-- SELECT PATIENT --</option>
+                                @foreach($patients as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('patient_id')" class="mt-2" />
+                        </div>
+
                         <div class="mt-4">
                             <x-primary-button>
                                 {{ __('Save Task') }}

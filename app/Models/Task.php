@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,8 @@ class Task extends Model
     protected $fillable = [
         'name',
         'due_date',
-        'user_id',
+        'assigned_to_user_id',
+        'patient_id',
         'team_id',
     ];
 
@@ -36,12 +38,21 @@ class Task extends Model
         static::addGlobalScope('team-tasks', function (Builder $query) {
             if (auth()->check()) {
                 $query->where('team_id', auth()->user()->current_team_id);
+
+                if (auth()->user()->hasRole(Role::Patient)) {
+                    $query->where('patient_id', auth()->id());
+                }
             }
         });
     }
 
-    public function user(): BelongsTo
+    public function assignee(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'assigned_to_user_id');
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'patient_id');
     }
 }

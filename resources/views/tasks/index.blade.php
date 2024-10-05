@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                     <div class="overflow-hidden overflow-x-auto bg-white">
                         <div class="min-w-full align-middle">
-                            @can('create', \App\Models\Task::class)
+                            @can(\App\Enums\Permission::CREATE_TASK)
                             <a href="{{ route('tasks.create') }}" class="underline">Add new task</a>
                             <br /><br />
                             @endcan
@@ -22,14 +22,12 @@
                                         <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Name</span>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
-                                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">User</span>
+                                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Assigned To</span>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
-                                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Due Date</span>
+                                        <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Patient</span>
                                     </th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left">
-
-                                    </th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left"></th>
                                 </tr>
                                 </thead>
 
@@ -40,16 +38,16 @@
                                             {{ $task->name }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                            {{ $task->user->name }}
+                                            {{ $task->assignee->name }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                            {{ $task->due_date }}
+                                            {{ $task->patient->name }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                            @can('update', $task)
+                                            @can(\App\Enums\Permission::EDIT_TASK)
                                                 <a href="{{ route('tasks.edit', $task) }}" class="underline">Edit</a>
                                             @endcan
-                                            @can('delete', $task)
+                                            @can(\App\Enums\Permission::DELETE_TASK)
                                                 |
                                                 <form action="{{ route('tasks.destroy', $task) }}"
                                                       method="POST"

@@ -22,7 +22,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        $teams = Team::where('name', '!=', 'Master Team')->pluck('name', 'id');
+        $teams = Team::where('name', '!=', 'Master Admin Team')->pluck('name', 'id');
 
         return view('auth.register', compact('teams'));
     }
