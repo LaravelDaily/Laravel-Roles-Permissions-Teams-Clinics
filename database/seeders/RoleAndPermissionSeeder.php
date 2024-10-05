@@ -27,9 +27,30 @@ class RoleAndPermissionSeeder extends Seeder
         $permissions = [];
 
         switch ($role->name) {
-            case RoleEnum::Doctor->value:
-            case RoleEnum::Staff->value:
+            case RoleEnum::MasterAdmin->value:
+                $permissions = [
+                    Permission::LIST_TEAM,
+                    Permission::CREATE_TEAM,
+                ];
+                break;
+            case RoleEnum::ClinicOwner->value:
+                $permissions = [
+                    Permission::SWITCH_TEAM,
+                    Permission::LIST_USER,
+                    Permission::CREATE_USER,
+                ];
+                break;
             case RoleEnum::ClinicAdmin->value:
+                $permissions = [
+                    Permission::LIST_USER,
+                    Permission::CREATE_USER,
+                    Permission::LIST_TASK,
+                    Permission::CREATE_TASK,
+                    Permission::EDIT_TASK,
+                    Permission::DELETE_TASK,
+                ];
+                break;
+            case RoleEnum::Staff->value:
                 $permissions = [
                     Permission::LIST_TASK,
                     Permission::CREATE_TASK,
@@ -37,22 +58,16 @@ class RoleAndPermissionSeeder extends Seeder
                     Permission::DELETE_TASK,
                 ];
                 break;
+            case RoleEnum::Doctor->value:
+                $permissions = [
+                    Permission::LIST_TASK,
+                    Permission::CREATE_TASK,
+                    Permission::EDIT_TASK,
+                ];
+                break;
             case RoleEnum::Patient->value:
                 $permissions = [
                     Permission::LIST_TASK,
-                ];
-                break;
-            case RoleEnum::ClinicOwner->value:
-                $permissions = [
-                    Permission::LIST_USER,
-                    Permission::CREATE_USER,
-                    Permission::SWITCH_TEAM,
-                ];
-                break;
-            case RoleEnum::MasterAdmin->value:
-                $permissions = [
-                    Permission::LIST_TEAM,
-                    Permission::CREATE_TEAM,
                 ];
                 break;
         }

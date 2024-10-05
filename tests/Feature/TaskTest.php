@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Models\User;
 use App\Models\Team;
 use App\Models\Task;
@@ -87,7 +86,7 @@ it('allows administrator and manager to update any task in their team', function
     fn () => User::factory()->staff()->create(),
 ]);
 
-it('allows super admin and admin to delete task for his team', function (User $user) {
+it('allows clinic admin and staff to delete task for his team', function (User $user) {
     User::factory()->create(['current_team_id' => $user->current_team_id]);
 
     $task = Task::factory()->create([
@@ -101,9 +100,23 @@ it('allows super admin and admin to delete task for his team', function (User $u
     expect(Task::count())->toBeInt()->toBe(0);
 })->with([
     fn () => User::factory()->clinicAdmin()->create(),
-    fn () => User::factory()->doctor()->create(),
     fn () => User::factory()->staff()->create(),
 ]);
+
+it('does not allow doctor to delete tasks', function () {
+    $doctor = User::factory()->doctor()->create();
+    User::factory()->create(['current_team_id' => $doctor->current_team_id]);
+
+    $task = Task::factory()->create([
+        'team_id' => $doctor->current_team_id,
+    ]);
+
+    actingAs($doctor)
+        ->delete(route('tasks.destroy', $task))
+        ->assertForbidden();
+
+    expect(Task::count())->toBeInt()->toBe(1);
+});
 
 it('does not allow super admin and admin to delete task for other team', function (User $user) {
     $team = Team::factory()->create();
